@@ -23,6 +23,7 @@ function getFlashMessage($key)
 }
 // FLASH MESSAGE
 
+// AUTH
 function ensureAuthenticated()
 {
     if (!isset($_SESSION['username'])) {
@@ -41,6 +42,9 @@ function ensureUserId()
         }
     }
 }
+// AUTH
+
+// LOGIN & REGISTER
 function register($data)
 {
     global $conn;
@@ -81,7 +85,7 @@ function login($data)
             $_SESSION['role'] = $user['role'];
             $_SESSION['id'] = $user['id'];
             setFlashMessage('success', 'Login Success!');
-            header("Location: dashboard/index.php?userid=" . $user['id']);
+            header("Location: dashboardBlog/index.php?userid=" . $user['id']);
             exit;
         }
     }
@@ -96,3 +100,49 @@ function logout()
     header("Location: ../login.php");
     exit;
 }
+// LOGIN & REGISTER
+
+// CATEGORY CMS
+
+function createCategory($category,$userId){
+    global $conn;
+    $query = "INSERT INTO category (category,user_id) VALUES (?,?)";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("si",$category,$userId);
+
+    if ($stmt->execute()) {
+        $stmt->close();
+        return true;
+    } else {
+        $stmt->close();
+        return false;
+    }
+}
+
+function updateCategory($category, $id)
+{
+    global $conn;
+    $stmt = $conn->prepare("UPDATE category SET category=? WHERE id=? ");
+    $stmt->bind_param("si", $category, $id);
+    if ($stmt->execute()) {
+        $stmt->close();
+        return true;
+    } else {
+        $stmt->close();
+        return false;
+    }
+}
+function deleteCategory($id)
+{
+    global $conn;
+    $stmt = $conn->prepare("DELETE FROM category WHERE id=? ");
+    $stmt->bind_param("i", $id);
+    if ($stmt->execute()) {
+        $stmt->close();
+        return true;
+    } else {
+        $stmt->close();
+        return false;
+    }
+}
+// CATEGORY CMS

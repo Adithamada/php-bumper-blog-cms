@@ -49,6 +49,9 @@
 .sidebar{
     height: 777px;
 }
+.alert-dashboard{
+    position: absolute;
+}
 @media screen and (max-width:980px){
     .hero-content{
         left: 35px;

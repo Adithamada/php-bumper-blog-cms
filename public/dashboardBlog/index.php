@@ -48,8 +48,8 @@ ensureUserId();
                 <a href="" class="navbar-brand mb-4">
                     <h2><strong>BUMPER</strong><span class="text-secondary">blog</span></h2>
                 </a>
-                <li class="nav-item bg-secondary p-1 rounded shadow"><a href="" class="nav-link text-light">Blog</a></li>
-                <li class="nav-item "><a href="" class="nav-link">Category</a></li>
+                <li class="nav-item bg-secondary p-1 rounded shadow"><a href="../dashboardBlog/index.php?<?= "userid=".$userId ?>" class="nav-link text-light">Blog</a></li>
+                <li class="nav-item "><a href="../dashboardCategory/index.php?<?= "userid=".$userId ?>" class="nav-link">Category</a></li>
             </ul>
         </div>
         <div class="col-10">
@@ -77,14 +77,14 @@ ensureUserId();
                     </li>
                 </ul>
             </nav>
+            <?php if($success): ?>
             <div class="container">
-                <?php if ($success): ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong>Success</strong> <?= $success  ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
+                <div class="col-5 alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Success</strong><?= $success  ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             </div>
+            <?php endif; ?>
             <div class="container mb-5">
                 <div class="card shadow-sm">
                     <div class="card-header bg-secondary-subtle d-flex justify-content-between">

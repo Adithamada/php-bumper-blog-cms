@@ -192,6 +192,9 @@ ensureUserId();
                             <tr>
                                 <th>ID</th>
                                 <th>Category</th>
+                                <?php if ($_SESSION['role'] == 1): ?>
+                                    <th>User</th>
+                                <?php endif; ?>
                                 <th colspan="2">Action</th>
                             </tr>
                             <?php $i = 1; ?>
@@ -199,6 +202,9 @@ ensureUserId();
                                 <tr>
                                     <td><?= $i ?></td>
                                     <td> <?= $category['category'] ?> </td>
+                                    <?php if ($_SESSION['role'] == 1): ?>
+                                        <td> <?= $category['user_id'] ?> </td>
+                                    <?php endif; ?>
                                     <td>
                                         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#updateModal<?= $category['id']  ?>">
                                             Update

@@ -1,13 +1,9 @@
 <?php
-require_once __DIR__ . "/../../include/function.php";
 session_start();
+require_once __DIR__ . "/../../include/function.php";
 $username = "";
 $userId = "";
 $success = "";
-if(isset($_SESSION['success'])){
-    $success = getFlashMessage($_SESSION['success']);
-    unset($_SESSION['success']);
-}
 if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
 }
@@ -19,6 +15,10 @@ if (isset($_GET['userid'])) {
 
 if (isset($_POST['logout'])) {
     logout();
+}
+$successMessage = getFlashMessage('success');
+if ($successMessage !== null) {
+    $success = htmlspecialchars($successMessage);
 }
 ensureAuthenticated();
 ensureUserId();
@@ -77,12 +77,14 @@ ensureUserId();
                     </li>
                 </ul>
             </nav>
-            <?php if ($success): ?>
-                <div class="alert alert-success alert-dismissible fade show position-absolute z-1 top-3 " role="alert">
-                    <strong>Success</strong> <?= $success  ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            <?php endif; ?>
+            <div class="container">
+                <?php if ($success): ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Success</strong> <?= $success  ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
+            </div>
             <div class="container mb-5">
                 <div class="card shadow-sm">
                     <div class="card-header bg-secondary-subtle d-flex justify-content-between">

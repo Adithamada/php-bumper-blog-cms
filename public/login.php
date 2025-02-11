@@ -4,10 +4,6 @@ require "../include/function.php";
 $error = [];
 $success = "";
 
-if (isset($_SESSION['success'])) {
-    $success = getFlashMessage($_SESSION['success']);
-}
-
 if (isset($_POST['login'])) {
     $data = [
         "username" => htmlspecialchars($_POST['username'] ?? ''),
@@ -23,7 +19,6 @@ if (isset($_POST['login'])) {
 
     if (empty($error)) {
         if (login($data)) {
-            setFlashMessage('success', 'Login Success!');
             exit;
         } else {
             $error[] = "Login Fail! Check your input!";
@@ -32,6 +27,10 @@ if (isset($_POST['login'])) {
     if (!empty($error)) {
         setFlashMessage('error', $error);
     }
+}
+$successMessage = getFlashMessage('success');
+if ($successMessage !== null) {
+    $success = htmlspecialchars($successMessage);
 }
 $error = getFlashMessage('error');
 ?>

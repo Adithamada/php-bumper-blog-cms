@@ -148,13 +148,19 @@ ensureUserId();
                 </a>
                 <li class="nav-item bg-secondary p-1 rounded shadow"><a href="../dashboardBlog/index.php?<?= "userid=" . $userId ?>" class="nav-link text-light">Blog</a></li>
                 <li class="nav-item "><a href="../dashboardCategory/index.php?<?= "userid=" . $userId ?>" class="nav-link">Category</a></li>
+                <?php if ($_SESSION['role'] == 1): ?>
+                    <li class="nav-item "><a href="../dashboardUser/index.php?<?= "userid=" . $userId ?>" class="nav-link">User</a></li>
+                <?php endif; ?>
             </ul>
         </div>
         <div class="col-10">
             <nav class="navbar navbar-expand bg-secondary shadow mb-5">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a href="" class="nav-link text-light active">Blog</a></li>
-                    <li class="nav-item"><a href="" class="nav-link text-light">Category</a></li>
+                    <li class="nav-item"><a href="../dashboardBlog/index.php?<?= "userid=" . $userId ?>" class="nav-link text-light active">Blog</a></li>
+                    <li class="nav-item"><a href="../dashboardCategory/index.php?<?= "userid=" . $userId ?>" class="nav-link text-light">Category</a></li>
+                    <?php if ($_SESSION['role'] == 1): ?>
+                        <li class="nav-item"><a href="../dashboardUser/index.php?<?= "userid=" . $userId ?>" class="nav-link text-light">User</a></li>
+                    <?php endif; ?>
                     <li class="nav-item">
                         <div class="dropdown">
                             <button

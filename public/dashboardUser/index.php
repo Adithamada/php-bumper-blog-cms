@@ -14,62 +14,14 @@ if (isset($_GET['userid'])) {
     $userId = $_GET['userid'];
 
     if (isset($_SESSION['role']) && $_SESSION['role'] == 1) {
-        $stmtSelectCategory = $conn->prepare("SELECT * FROM category");
-    } elseif (isset($_SESSION['role']) && $_SESSION['role'] == 0) {
-        $stmtSelectCategory = $conn->prepare("SELECT * FROM category WHERE user_id = ?");
-        $stmtSelectCategory->bind_param('i', $userId);
-    } else {
+        $stmtSelectUser = $conn->prepare("SELECT * FROM users");
+    }else{  
         return []; // Return empty array if role is not set
     }
 
-    $stmtSelectCategory->execute();
-    $resultSelectCategory = $stmtSelectCategory->get_result();
-    $rowSelectCategory = $resultSelectCategory->fetch_all(MYSQLI_ASSOC);
-}
-
-if (isset($_POST['create'])) {
-    $category = htmlspecialchars($_POST['category']);
-
-    if (empty($category)) {
-        setFlashMessage('error', 'Fail to make category required!');
-    } else {
-        if (createCategory($category, $userId)) {
-            setFlashMessage('success', 'New Category!');
-        } else {
-            setFlashMessage('error', 'Fail to create category!');
-        }
-        header("Location: index.php?userid=" . $userId);
-        exit;
-    }
-}
-
-if (isset($_POST['update'])) {
-    $id = htmlspecialchars($_POST['updateId']);
-    $category = htmlspecialchars($_POST['category']);
-
-    if (empty($category)) {
-        setFlashMessage('error', 'Fail to update category required!');
-    } else {
-        if (updateCategory($category, $id)) {
-            setFlashMessage('success', 'Update Category!');
-        } else {
-            setFlashMessage('error', 'Fail to update category!');
-        }
-        header("Location: index.php?userid=" . $userId);
-        exit;
-    }
-}
-
-if (isset($_POST['delete'])) {
-    $id = htmlspecialchars($_POST['deleteId']);
-
-    if (deleteCategory($id)) {
-        setFlashMessage('success', 'Category deleted!');
-    } else {
-        setFlashMessage('error', 'Fail delete category!');
-    }
-    header("Location: index.php?userid=" . $userId);
-    exit;
+    $stmtSelectUser->execute();
+    $resultSelectUser = $stmtSelectUser->get_result();
+    $rowSelectUser = $resultSelectUser->fetch_all(MYSQLI_ASSOC);
 }
 
 if (isset($_POST['logout'])) {
@@ -113,19 +65,13 @@ ensureUserId();
                 </a>
                 <li class="nav-item"><a href="../dashboardBlog/index.php?<?= "userid=" . $userId ?>" class="nav-link">Blog</a></li>
                 <li class="nav-item bg-secondary p-1 rounded shadow"><a href="../dashboardCategory/index.php?<?= "userid=" . $userId ?>" class="nav-link text-light">Category</a></li>
-                <?php if ($_SESSION['role'] == 1): ?>
-                    <li class="nav-item "><a href="../dashboardUser/index.php?<?= "userid=" . $userId ?>" class="nav-link">User</a></li>
-                <?php endif; ?>
             </ul>
         </div>
         <div class="col-10">
             <nav class="navbar navbar-expand bg-secondary shadow mb-5">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a href="../dashboardBlog/index.php?<?= "userid=" . $userId ?>" class="nav-link text-light active">Blog</a></li>
-                    <li class="nav-item"><a href="../dashboardCategory/index.php?<?= "userid=" . $userId ?>" class="nav-link text-light">Category</a></li>
-                    <?php if ($_SESSION['role'] == 1): ?>
-                        <li class="nav-item"><a href="../dashboardUser/index.php?<?= "userid=" . $userId ?>" class="nav-link text-light">User</a></li>
-                    <?php endif; ?>
+                    <li class="nav-item"><a href="" class="nav-link text-light active">Blog</a></li>
+                    <li class="nav-item"><a href="" class="nav-link text-light">Category</a></li>
                     <li class="nav-item">
                         <div class="dropdown">
                             <button
@@ -197,20 +143,20 @@ ensureUserId();
                         <table class="table table-bordered">
                             <tr>
                                 <th>ID</th>
-                                <th>Category</th>
-                                <?php if ($_SESSION['role'] == 1): ?>
-                                    <th>User</th>
-                                <?php endif; ?>
+                                <th>User ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Level</th>
                                 <th colspan="2">Action</th>
                             </tr>
                             <?php $i = 1; ?>
-                            <?php foreach ($rowSelectCategory as $category): ?>
+                            <?php foreach ($rowSelectUser as $user): ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td> <?= $category['category'] ?> </td>
-                                    <?php if ($_SESSION['role'] == 1): ?>
-                                        <td> <?= $category['user_id'] ?> </td>
-                                    <?php endif; ?>
+                                    <td> <?= $user['id'] ?> </td>
+                                    <td> <?= $user['username'] ?> </td>
+                                    <td> <?= $user['email'] ?> </td>
+                                    <td> <?= $level = $user['role']==1?'Super Admin':'Admin' ?> </td>
                                     <td>
                                         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#updateModal<?= $category['id']  ?>">
                                             Update

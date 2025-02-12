@@ -1,5 +1,22 @@
+<?php
+require_once __DIR__ . "/../include/function.php";
+
+//SELECT LATEST POST
+$stmtLatestPost = $conn->prepare("SELECT * FROM post ORDER BY date DESC LIMIT 1");
+$stmtLatestPost->execute();
+$resultLatestPost = $stmtLatestPost->get_result();
+$latestPost = $resultLatestPost->fetch_assoc();
+
+//SELECT POST
+$stmtSelectPost = $conn->prepare("SELECT * FROM post");
+$stmtSelectPost->execute();
+$resultSelectPost = $stmtSelectPost->get_result();
+$rowSelectPost = $resultSelectPost->fetch_all(MYSQLI_ASSOC);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +28,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <title>BUMPER</title>
 </head>
+
 <body>
     <!-- NAVBAR -->
     <header class="mb-5 sticky-top shadow-sm">
@@ -58,17 +76,20 @@
         </div>
     </div>
     <!-- NAVBAR -->
-    
+
     <!-- HERO -->
     <div class="container position-relative text-center mb-5">
         <div class="col-12 position-relative">
-            <img src="public/assets/mountaineer.png" class="img-fluid rounded shadow">
+            <img src="img_upload/<?= $latestPost['img'] ?>" class="img-fluid rounded shadow">
             <div class="hero-content" style="text-align: start !important;">
                 <div class="d-none d-md-none d-lg-block text-light">
                     <a href="" class="text-decoration-none">
-                        <span class="badge text-bg-light">Adventure</span>
+                        <?php $category = getPostCategory($latestPost['id']) ?>
+                        <span class="badge text-bg-light"><?= $category ?></span>
                     </a>
-                    <a href="" class="text-decoration-none text-light fw-bold"><h1>Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.</h1></a>
+                    <a href="" class="text-decoration-none text-light fw-bold">
+                        <h1><?= $latestPost['title'] ?></h1>
+                    </a>
                     <p class="fs-5">Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
                     <div class="d-flex gap-3">
                         <a href="" class="text-decoration-none">
@@ -81,20 +102,26 @@
                     </div>
                 </div>
                 <div class="d-none d-md-block d-lg-none text-light">
-                    <a href="" class="text-decoration-none text-light"><h4>Lorem ipsum dolor sit amet.</h4></a>
+                    <a href="" class="text-decoration-none text-light">
+                        <h4>Lorem ipsum dolor sit amet.</h4>
+                    </a>
                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
                     <div class="d-flex gap-3">
                         <a href="" class="text-decoration-none">
                             <div class="d-flex gap-2 align-items-center text-light">
                                 <i class="bi bi-person-fill"></i>
-                                <p class="my-0 py-0">Adithama</p>
+                                <?php $user = getPostUser($latestPost['id']) ?>
+
+                                <p class="my-0 py-0"><?= $user ?></p>
                             </div>
                         </a>
                         <p class="my-0 py-0">2 - 8 - 2025</p>
                     </div>
                 </div>
                 <div class="d-block d-md-none text-light">
-                    <a href="" class="text-decoration-none text-light"><h5>Lorem ipsum dolor sit amet.</h5></a>
+                    <a href="" class="text-decoration-none text-light">
+                        <h5>Lorem ipsum dolor sit amet.</h5>
+                    </a>
                     <div class="d-flex gap-2">
                         <a href="" class="text-decoration-none text-light">
                             <div class="d-flex gap-1 align-items-center">
@@ -116,81 +143,35 @@
             <h3>Latest Blog</h3>
         </div>
         <div class="row">
-            <div class="col-12 col-md-6 col-lg-4 mb-3 mb-md-0">
-                <div class="card shadow">
-                    <div class="card-header p-0"><img src="public/assets/mountaineer.png" class="img-fluid rounded-top"></div>
-                    <div class="card-body">
-                    <a href="" class="text-decoration-none">
-                        <span class="badge text-bg-dark">Adventure</span>
-                    </a>
-                        <div class="blog-content mb-5">
-                            <a href="" class="text-decoration-none text-dark">
-                                <h3>Lorem ipsum dolor sit amet.</h3>
+            <?php foreach ($rowSelectPost as $post): ?>
+                <div class="col-12 col-md-6 col-lg-4 mb-3 mb-md-0">
+                    <div class="card shadow">
+                        <div class="card-header p-0"><img src="img_upload/<?= $post['img'] ?>" class="img-fluid rounded-top"></div>
+                        <div class="card-body">
+                            <a href="" class="text-decoration-none">
+                                <?php $category = getPostCategory($post['id']) ?>
+                                <span class="badge text-bg-dark"><?= $category  ?></span>
                             </a>
-                            <p class="">Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <a href="" class="text-decoration-none text-dark">
-                                <div class="d-flex gap-2 align-items-center">
-                                    <i class="bi bi-person-fill"></i>
-                                    <p class="my-0 py-0">Adithama</p>
-                                </div>
-                            </a>
-                            <p class="my-0 py-0 text-secondary">2 - 8 - 2025</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-4 mb-3 mb-md-0">
-                <div class="card shadow">
-                    <div class="card-header p-0"><img src="public/assets/mountaineer.png" class="img-fluid rounded-top"></div>
-                    <div class="card-body">
-                        <a href="" class="text-decoration-none">
-                            <span class="badge text-bg-dark">Adventure</span>
-                        </a>
-                        <div class="blog-content mb-5">
-                            <a href="" class="text-decoration-none text-dark">
-                                <h3>Lorem ipsum dolor sit amet.</h3>
-                            </a>
-                            <p class="">Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <a href="" class="text-decoration-none text-secondary">
-                                <div class="d-flex gap-2 align-items-center">
-                                    <i class="bi bi-person-fill"></i>
-                                    <p class="my-0 py-0">Adithama</p>
-                                </div>
-                            </a>
-                            <p class="my-0 py-0 text-secondary">2 - 8 - 2025</p>
+                            <div class="blog-content mb-5">
+                                <a href="" class="text-decoration-none text-dark">
+                                    <h3><?= $post['title'] ?></h3>
+                                </a>
+                                <p class=""><?= getShortDescription($post['description'])  ?></p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <a href="" class="text-decoration-none text-dark">
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <i class="bi bi-person-fill"></i>
+                                        <?php $user = getPostUser($post['id']) ?>
+                                        <p class="my-0 py-0"><?= $user  ?></p>
+                                    </div>
+                                </a>
+                                <p class="my-0 py-0 text-secondary"><?= $post['date'] ?></p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-4 mb-3 mb-md-0">
-                <div class="card shadow">
-                    <div class="card-header p-0"><img src="public/assets/mountaineer.png" class="img-fluid rounded-top"></div>
-                    <div class="card-body">
-                        <a href="" class="text-decoration-none">
-                            <span class="badge text-bg-dark">Adventure</span>
-                        </a>
-                        <div class="blog-content mb-5">
-                            <a href="" class="text-decoration-none text-dark">
-                                <h3>Lorem ipsum dolor sit amet.</h3>
-                            </a>
-                            <p class="">Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <a href="" class="text-decoration-none text-secondary">
-                                <div class="d-flex gap-2 align-items-center">
-                                    <i class="bi bi-person-fill"></i>
-                                    <p class="my-0 py-0">Adithama</p>
-                                </div>
-                            </a>
-                            <p class="my-0 py-0 text-secondary">2 - 8 - 2025</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
     </div>
     <!-- BLOG -->
@@ -207,4 +188,5 @@
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/searchBarToggle.js"></script>
 </body>
+
 </html>

@@ -403,3 +403,50 @@ function deletePost($id)
 
 
 // BLOG CMS
+
+// HOME INDEX 
+function getPostCategory($postId)
+{
+    global $conn;
+    $categoryName = ""; // Store only one category name
+
+    $stmt = $conn->prepare("
+        SELECT c.category 
+        FROM category c
+        JOIN post p ON c.id = p.category_id
+        WHERE p.id = ?
+    ");
+    $stmt->bind_param("i", $postId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($row = $result->fetch_assoc()) {
+        $categoryName = $row['category']; // Get the category name
+    }
+
+    $stmt->close();
+    return $categoryName;
+}
+
+function getPostUser($postId)
+{
+    global $conn;
+    $username = "";
+
+    $stmt = $conn->prepare("
+        SELECT u.id, u.username 
+        FROM users u
+        JOIN post p ON u.id = p.user_id
+        WHERE p.id = ?
+    ");
+    $stmt->bind_param("i", $postId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $username = $row['username']; // Collect username
+    }
+
+    $stmt->close();
+    return $username;
+}

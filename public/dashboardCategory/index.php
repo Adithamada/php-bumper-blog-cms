@@ -14,17 +14,17 @@ if (isset($_GET['userid'])) {
     $userId = $_GET['userid'];
 
     if (isset($_SESSION['role']) && $_SESSION['role'] == 1) {
-        $stmt = $conn->prepare("SELECT * FROM category");
+        $stmtSelectCategory = $conn->prepare("SELECT * FROM category");
     } elseif (isset($_SESSION['role']) && $_SESSION['role'] == 0) {
-        $stmt = $conn->prepare("SELECT * FROM category WHERE user_id = ?");
-        $stmt->bind_param('i', $userId);
+        $stmtSelectCategory = $conn->prepare("SELECT * FROM category WHERE user_id = ?");
+        $stmtSelectCategory->bind_param('i', $userId);
     } else {
         return []; // Return empty array if role is not set
     }
 
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_all(MYSQLI_ASSOC);
+    $stmtSelectCategory->execute();
+    $resultSelectCategory = $stmtSelectCategory->get_result();
+    $rowSelectCategory = $resultSelectCategory->fetch_all(MYSQLI_ASSOC);
 }
 
 if (isset($_POST['create'])) {
@@ -198,7 +198,7 @@ ensureUserId();
                                 <th colspan="2">Action</th>
                             </tr>
                             <?php $i = 1; ?>
-                            <?php foreach ($row as $category): ?>
+                            <?php foreach ($rowSelectCategory as $category): ?>
                                 <tr>
                                     <td><?= $i ?></td>
                                     <td> <?= $category['category'] ?> </td>
